@@ -2,10 +2,11 @@ import { Deck } from "./Deck.js";
 import { Player } from "./Player.js";
 
 class Game {
-  constructor({ playersCards, dealersCards, player }) {
+  constructor({ playersCards, dealersCards, player, dealer }) {
+    this.player = player;
+    this.dealer = new Player("Krupier");
     this.playersCards = playersCards;
     this.dealersCards = dealersCards;
-    this.player = player;
     this.deck = new Deck();
     this.deck.shuffle();
   }
@@ -17,8 +18,12 @@ class Game {
   dealCards() {
     for (let n = 0; n < 2; n++) {
       let card1 = this.deck.pickOne();
+      let card2 = this.deck.pickOne();
       this.player.hand.addCard(card1);
       this.playersCards.appendChild(card1.render());
+
+      this.dealer.hand.addCard(card2);
+      this.dealersCards.appendChild(card2.render());
     }
   }
 }
