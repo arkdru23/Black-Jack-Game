@@ -1,4 +1,5 @@
 import { Deck } from "./Deck.js";
+import { Message } from "./Message.js";
 import { Player } from "./Player.js";
 import { Table } from "./Table.js";
 
@@ -10,11 +11,13 @@ class Game {
     table,
     hitButton,
     standButton,
+    messageBox,
   }) {
     this.hitButton = hitButton;
     this.standButton = standButton;
     this.playerPoints = playerPoints;
     this.dealerPoints = dealerPoints;
+    this.messageBox = messageBox;
     this.player = player;
     this.dealer = new Player("Krupier");
     this.table = table;
@@ -62,6 +65,42 @@ class Game {
       this.table.showDealersCard(card);
       this.dealerPoints.innerHTML = this.dealer.calculatePoints();
     }
+
+    this.endTheGame();
+  }
+
+  endTheGame() {
+    this.hitButton.removeEventListener("click", (e) => this.hitCard());
+    this.standButton.removeEventListener("click", (e) => this.dealerPlays());
+
+    this.hitButton.style.display = "none";
+    this.standButton.style.display = "none";
+
+    if (this.player.points < 21 && this.player.points === this.dealer.points) {
+      this.messageBox.setText("Niestety ale padł remis!").show();
+
+      return;
+    }
+
+    if (this.player.points > 21) {
+      this.messageBox
+        .setText("Niestety graczu przegrałes! Wygrywa Dealer")
+        .show();
+
+      return;
+    }
+
+    if (this.dealer.points > 21) {
+      this.messageBox.setText("Wygrywasz graczu! Dealer przegrywa :(").show();
+      return;
+    }
+
+    if (this.player.points < this.dealer.points) {
+      this.messageBox
+        .setText("Niestety graczu przegrałes! Wygrywa Dealer")
+        .show();
+      return;
+    }
   }
 }
 
@@ -69,6 +108,8 @@ const table = new Table(
   document.getElementById("dealersCards"),
   document.getElementById("playersCards")
 );
+const messageBox = new Message(document.getElementById("message"));
+
 const player = new Player("Arkadiusz");
 
 const game = new Game({
@@ -78,5 +119,6 @@ const game = new Game({
   playerPoints: document.getElementById("playerPoints"),
   player,
   table,
+  messageBox,
 });
 game.run();
