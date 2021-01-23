@@ -5,10 +5,10 @@ export class Table {
   }
 
   showPlayerCard(card) {
-    this.playerCards.appendChild(card);
+    this.playerCards.appendChild(card.render());
   }
 
   showDealersCard(card) {
-    this.dealersCards.appendChild(card);
+    this.dealersCards.appendChild(card.render());
   }
 }
